@@ -36,7 +36,7 @@ Before you begin, ensure you have installed:
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/school-management-system.git
+git clone https://github.com/qumail/school-management-system.git
 cd school-management-system
 
 ## Install Dependencies

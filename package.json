@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "student-management-system-api",
   "main": "index.js",
+  "node": "24.8.0",
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
