@@ -426,24 +426,24 @@ module.exports = class UserServer {
         this.server = null;
 
         this._validateComponents();
-        
+
         // Setup middleware
         this._setupSecurityMiddleware();
         this._setupMiddleware();
-        
+
         // Setup routes
         this._setupRoutes();
-        
+
         // Setup error handlers
         this._setupErrorHandlers();
-        
+
         console.log('✅ UserServer initialization complete');
     }
 
     _validateComponents() {
         const required = ['auth', 'roleCheck'];
         const missing = required.filter(m => !this.mws[m]);
-        
+
         if (missing.length > 0) {
             console.warn(`⚠️ Missing middleware: ${missing.join(', ')}`);
         }
@@ -462,7 +462,7 @@ module.exports = class UserServer {
         }
 
         const PORT = this.config?.dotEnv?.USER_PORT || 3000;
-        
+
         this.server = this.app.listen(PORT, () => {
             console.log(`\n🚀 Server running on port: ${PORT}`);
             console.log(`🔍 Environment: ${process.env.NODE_ENV || 'development'}`);
@@ -483,7 +483,7 @@ module.exports = class UserServer {
 
     _setupSecurityMiddleware() {
         console.log('\n🔒 Setting up security middleware...');
-        
+
         const security = this.mws?.security;
         const rateLimit = this.mws?.rateLimit;
 
@@ -522,7 +522,7 @@ module.exports = class UserServer {
         this.app.use(cors({ origin: '*' }));
         this.app.use(express.json({ limit: '10mb' }));
         this.app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-        
+
         // Request logging (only in development)
         if (process.env.NODE_ENV === 'development') {
             this.app.use((req, res, next) => {
@@ -533,8 +533,8 @@ module.exports = class UserServer {
 
         // Health check (always available)
         this.app.get('/health', (req, res) => {
-            res.json({ 
-                status: 'healthy', 
+            res.json({
+                status: 'healthy',
                 timestamp: new Date().toISOString(),
                 env: process.env.NODE_ENV || 'development'
             });
@@ -545,10 +545,10 @@ module.exports = class UserServer {
 
     _setupRoutes() {
         console.log('\n📂 Setting up routes...');
-        
+
         const registry = new RouteRegistry(this.app, this.mws);
         const routeLoader = new RouteLoader(path.join(__dirname, '../../routes'));
-        
+
         // Load all route files
         routeLoader.loadRoutes(registry, this.managers);
 
@@ -566,6 +566,46 @@ module.exports = class UserServer {
             });
         });
 
+        // Add this right after your test endpoint
+        this.app.get('/api/debug/registry', (req, res) => {
+            try {
+                const registry = new RouteRegistry(this.app, this.mws);
+                const routeLoader = new RouteLoader(path.join(__dirname, '../../routes'));
+
+                // Check if routes directory exists
+                const fs = require('fs');
+                const routesDir = path.join(__dirname, '../../routes');
+                const routesExist = fs.existsSync(routesDir);
+
+                let files = [];
+                if (routesExist) {
+                    files = fs.readdirSync(routesDir);
+                }
+
+                res.json({
+                    success: true,
+                    debug: {
+                        routesDirectory: {
+                            path: routesDir,
+                            exists: routesExist,
+                            files: files
+                        },
+                        currentDirectory: __dirname,
+                        environment: process.env.NODE_ENV,
+                        managers: Object.keys(this.managers),
+                        middleware: Object.keys(this.mws),
+                        nodeVersion: process.version
+                    }
+                });
+            } catch (error) {
+                res.status(500).json({
+                    success: false,
+                    error: error.message,
+                    stack: error.stack
+                });
+            }
+        });
+
         // Debug endpoints (only in development/test)
         if (process.env.NODE_ENV !== 'production') {
             this._setupDebugEndpoints(registry);
@@ -573,7 +613,7 @@ module.exports = class UserServer {
 
         const routes = registry.getRoutes();
         console.log(`✅ Loaded ${routes.length} routes`);
-        
+
         if (process.env.NODE_ENV === 'development') {
             console.log('\n📋 Registered Routes:');
             routes.forEach(route => {
@@ -584,7 +624,7 @@ module.exports = class UserServer {
 
     _setupDebugEndpoints(registry) {
         const auth = this.mws?.auth;
-        
+
         if (auth) {
             this.app.get('/api/debug/routes', auth, (req, res) => {
                 res.json({
@@ -626,7 +666,7 @@ module.exports = class UserServer {
         // Global error handler
         this.app.use((err, req, res, next) => {
             console.error('❌ Server error:', err);
-            
+
             const statusCode = err.statusCode || 500;
             const message = err.message || 'Internal server error';
 
