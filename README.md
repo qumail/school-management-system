@@ -38,6 +38,10 @@ cd school-management-system
 ### Deployment URLs
 - **Backend API**: https://school-management-system-p2yi.onrender.com
 
+### Repository Details
+- **Repository URL**: https://github.com/qumail/school-management-system
+- **Branch**: main
+
 
 ## Install Dependencies
 
