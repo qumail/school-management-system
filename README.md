@@ -10,12 +10,8 @@ A comprehensive web-based School Management System designed to streamline admini
 ## 🚀 Features
 
 - **Student Management**: Add, edit, and manage student profiles and records
-- **Teacher Management**: Manage teacher information and assignments
+- **School Management**: Add, edit and manage schools by school_admin or superadmin
 - **Class Management**: Create and manage classes, sections, and subjects
-- **Attendance Tracking**: Record and monitor student attendance
-- **Grade Management**: Enter and calculate student grades
-- **Parent/Teacher Communication**: Messaging system for updates
-- **Timetable Management**: Create and manage class schedules
 - **User Authentication**: Secure login for different user roles
 
 ## 🛠️ Technology Stack
@@ -39,6 +35,10 @@ Before you begin, ensure you have installed:
 git clone https://github.com/qumail/school-management-system.git
 cd school-management-system
 
+### Deployment URLs
+- **Backend API**: https://school-management-system-p2yi.onrender.com
+
+
 ## Install Dependencies
 
 # For backend
@@ -56,3 +56,16 @@ npm run dev
 - **Base URL**: `http://localhost:3000/api`
 - **API Version**: 1.0.0
 - **Content Type**: `application/json`
+
+#### Features Implemented
+✓ User authentication with role-based access
+✓ Student registration and management
+
+#### Technical Considerations
+- **Database**: MongoDB Atlas cluster (free tier)
+- **API Documentation**: Please check the docs folder in the root directory where all necessary documentation is available.
+
+#### Contact Information
+- **Technical Contact**: qumailreshii@gmail.com
+- **GitHub Username**: @qumail
+- **LinkedIn**: [https://www.linkedin.com/in/qumailreshi]
